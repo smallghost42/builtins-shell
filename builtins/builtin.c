@@ -75,9 +75,7 @@ void	ft_cd(char *path)
 	char cwd[1024];
 
 	if (chdir(path) == 0)
-	{
 		getcwd(cwd, sizeof(cwd));
-	}
 	else
         perror("cd");
 	write (1, "\n", 1);
@@ -134,6 +132,11 @@ char **ft_copy_env(char **envp)
     return (copy);
 }
 
+void ft_rm_env(char **copy_env, char *line_read)
+{
+
+}
+
 void	ft_unset(char *line_read, char **copy_env)
 {
 	int i;
@@ -161,13 +164,11 @@ void	ft_unset(char *line_read, char **copy_env)
 		}
 		if (success == 1)
 		{
-			printf("ok\n");
+			ft_rm_env(copy_env, line_read);
 			break ;
 		}
 		i++;
 	}
-	if (success == 0)
-		printf("no such env\n");
 }
 
 int main(int argc, char *argv[], char *envp[])
