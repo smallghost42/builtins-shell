@@ -239,7 +239,7 @@ void pwd_prompt(char *path)
 {
 	const char *blue = "\033[0;33m";
     const char *reset = "\033[0m";
-	char	cwd[1024];
+	char	cwd[4096];
 	int		i;
 	int		count;
 
