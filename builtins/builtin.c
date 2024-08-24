@@ -1,13 +1,13 @@
 #include <ctype.h>
-#include <math.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <bsd/string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
-/////////////////////////////////////////////////
+/////////////////
 
 int	ft_check_size(char *s, char c)
 {
@@ -153,84 +153,27 @@ size_t	ft_strlen(const char *s)
 	return (len);
 }
 
-int	ft_isset(char c, char const *set)
-{
-	int	i;
-
-	i = 0;
-	while (set[i] != '\0')
-	{
-		if (set[i] == (char)c)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	ft_check_before(char *s1, char const *set)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (s1[i] != '\0')
-	{
-		if (ft_isset(s1[i], set) == 1)
-			j++;
-		else
-			break ;
-		i++;
-	}
-	return (j);
-}
-
-int	ft_check_last(char *s1, char const *set)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (s1[i + 1] != '\0')
-		i++;
-	j = i;
-	while (i > 0)
-	{
-		if (ft_isset(s1[i], set) == 1)
-			j--;
-		else
-			break ;
-		i--;
-	}
-	return (j);
-}
-
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	int		start;
-	int		len;
-	int		i;
-	char	*new;
+	int		end;
+	char	*str;
 
-	i = 0;
-	start = ft_check_before((char *)s1, set);
-	len = ft_check_last((char *)s1, set) - start + 1;
-	if (start == (int)ft_strlen(s1))
-		new = (char *) malloc(1);
-	else
-		new = (char *)malloc((len + 1) * sizeof(char));
-	if (new == NULL)
+	if (!s1 || !set)
 		return (NULL);
-	new[0] = '\0';
-	if (start == (int)ft_strlen(s1))
-		return ((char *)new);
-	while (len--)
-	{
-		new[i] = s1[start + i];
-		i++;
-	}
-	new[i] = '\0';
-	return ((char *)new);
+	start = 0;
+	end = ft_strlen(s1) - 1;
+	while (strchr(set, s1[start]) && start <= end)
+		start++;
+	if (start > end)
+		return (strdup(s1 + end + 1));
+	while (strchr(set, s1[end]) && end >= 0)
+		end--;
+	str = malloc(end - start + 2);
+	if (!str)
+		return (NULL);
+	strlcpy(str, &s1[start], end - start + 2);
+	return (str);
 }
 
 //////////////////////////////////////////////////
@@ -443,83 +386,83 @@ char 	**ft_unset(char *line_read, char **copy_env)
 	return (copy_env);
 }
 
-char **ft_export(char *line_read)
+/////////////////////////////////////////////////////
+
+int check_valid_name(char *name)
 {
 	int i;
+
+	i = 1;
+	while (name[i] && name[i] != '=')
+	{
+		if ((!isalpha(name[0]) && name[0] != '_') || (!isalnum(name[i]) && name[i] != '_'))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int check_if_exist(char *name, char **env, char **export)
+{
+	int i;
+	int j;
 	int len;
-	int len2;
-	char *trimed_line;
-	char **ex_split;
-	char **export;
 
 	i = 0;
+	j = 0;
 	len = 0;
-	trimed_line = ft_strtrim(line_read, "	");
-	ex_split = ft_split(trimed_line, ' ');
-	while (ex_split[len])
-		len++;
-	export = (char **) malloc((len + 1) * sizeof(char *));
-	len = 0;
-	len2 = len;
-	while (ex_split[len])
+	if (strchr(name, '='))
 	{
-		i = 1;
-		while (ex_split[len][i])
+		while (name[len] != '=')
+			len++;
+	}
+	else
+		return (1);
+	while (name[i] && name[i] != '=')
+	{
+		if (strncmp(export[i], name, len) && export[i][len] == '=')
+			return (2);
+		if (strncmp(env[i], name, len) && env[i][len] == '=')
+			return (3);
+		i++;
+	}
+	return (0);
+}
+
+char **ft_export(char *command, char **existing_export, char **env)
+{
+	int i;
+	char **export;
+	char **copy_env;
+	char **to_export;
+
+	i = 0;
+	to_export = ft_split(command, ' ');
+	while (to_export[i])
+	{
+		if (check_valid_name(to_export[i]))
 		{
-			if (isalpha(ex_split[len][0]) || ex_split[len][0] == '_')
+			if (check_if_exist(to_export[i], env, existing_export) == 1)
 			{
-				if (isalpha(ex_split[len][i] || isdigit(ex_split[len][i]) || ex_split[len][i] == '_'))
-				{
-					if (strchr(ex_split[len], '='))
-					{
-						export[len2] = malloc(ft_strlen(ex_split[len]) + 4);
-						int x = 0;
-						while (ex_split[len][x])
-						{
-							if (ex_split[len][x] == '=')
-							{
-								export[len2][x] = '=';
-								export[len2][x + 1] = '"';
-								x = x + 2;
-							}
-							else
-							{
-								export[len2][x] = ex_split[len][x];
-								x++;
-							}
-						}
-						export[len2][x] = '"';
-						export[len2][x + 1] = '\0';
-					}
-					else
-					{
-						export[len2] = malloc(ft_strlen(ex_split[len]) + 1);
-						int x = 0;
-						while (ex_split[len][x])
-						{
-							export[len2][x] = ex_split[len][x];
-							x++;
-						}
-						export[len2][x] = '\0';	
-					}
-					len2++;
-				}
-				else
-				{
-					printf("not a identifier-----------\n");
-					return (NULL);
-				}
+				if (create_or_not(to_export[i], env, existing_export))
+					export = create_new_env(to_export[i], existing_export);
 			}
-			else
+			else if (check_if_exist(to_export[i], env, existing_export) == 2)
+				export = reassign(to_export[i], existing_export);
+			else if (check_if_exist(to_export[i], env, existing_export) == 3)
 			{
-				printf("not a identifier\n");
-				return (NULL);
+				copy_env = env;
+				env = reassign(to_export[i], copy_env);
 			}
 		}
-		len++;
+		else
+			printf("invalid identifier\n");
+		i++;
 	}
-	return (NULL);
 }
+
+///////////////////////////////////////////////
+
 
 int main(int argc, char *argv[], char *envp[])
 {
@@ -531,6 +474,7 @@ int main(int argc, char *argv[], char *envp[])
 	(void)argc;
 	(void)argv;
 	line_read = NULL;
+	export = NULL;
 	copy_env = ft_copy_env(envp);
 	int a = 0;
     while (1)
@@ -563,14 +507,20 @@ int main(int argc, char *argv[], char *envp[])
 			temp = copy_env;
 			copy_env = ft_unset(line_read + 6, temp);
 		}
-		else if (strncmp(line_read, "export", 5) == 0)
+		else if (strncmp(line_read, "export", 6) == 0)
 		{
-			//if (line_read[6] == '\0')
-			//	ft_dispaly_export(export, copy_env);
-			//else
-			//{
-				export = ft_export(line_read + 6);
-			//}
+			if (line_read[7] == '\0')
+			{
+				if (export)
+				{
+                	for (int i = 0; export[i]; i++)
+					{
+                    	printf("%s\n", export[i]);
+					}
+            	}
+			}
+			else
+				export = ft_export(line_read + 7, export, copy_env);
 		}
 		else if (strcmp(line_read, "exit") == 0)
             break;
