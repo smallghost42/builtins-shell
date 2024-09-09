@@ -6,7 +6,7 @@
 /*   By: ferafano <ferafano@student.42antananarivo  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 08:52:40 by ferafano          #+#    #+#             */
-/*   Updated: 2024/09/09 08:55:51 by ferafano         ###   ########.fr       */
+/*   Updated: 2024/09/09 13:33:33 by ferafano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	ft_check_size_array(char *s, char c, int array_indice)
 	return (len);
 }
 
-char	**ft_fill_array(char **new, char *s, char c)
+char	**ft_fill_array(char **new_r, char *s, char c)
 {
 	int	i;
 	int	index;
@@ -78,18 +78,18 @@ char	**ft_fill_array(char **new, char *s, char c)
 			i++;
 		while (s[i] != c && s[i] != '\0')
 		{
-			new[index][j] = s[i];
+			new_r[index][j] = s[i];
 			i++;
 			j++;
 			if (s[i] == c || s[i] == '\0')
 			{
-				new[index][j] = '\0';
+				new_r[index][j] = '\0';
 				index++;
 			}
 		}
 	}
-	new[index] = NULL;
-	return (new);
+	new_r[index] = NULL;
+	return (new_r);
 }
 
 void	ft_freee(char **new_1, int i)
