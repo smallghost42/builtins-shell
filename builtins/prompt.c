@@ -6,7 +6,7 @@
 /*   By: ferafano <ferafano@student.42antananarivo  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:13:08 by ferafano          #+#    #+#             */
-/*   Updated: 2024/09/09 13:31:23 by ferafano         ###   ########.fr       */
+/*   Updated: 2024/09/09 13:27:34 by ferafano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ void pwd_prompt(char *path)
     const char *reset = "\033[0m";
     char cwd[4096];
     const char *home;
-    int home_len;
+	int home_len;
 
-	home = "/home/ferafano/";
-	home_len = strlen(home);
+	home = "/home/ferafano";
+    home_len = strlen(home);
     if (getcwd(cwd, sizeof(cwd)) != NULL)
     {
         write(1, blue, strlen(blue));
