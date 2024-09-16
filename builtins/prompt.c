@@ -6,23 +6,23 @@
 /*   By: ferafano <ferafano@student.42antananarivo  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:13:08 by ferafano          #+#    #+#             */
-/*   Updated: 2024/09/09 13:27:34 by ferafano         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:18:09 by ferafano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "buildin.h"
-#include <string.h>
-#include <unistd.h>
 
 void pwd_prompt(char *path)
 {
-    const char *blue = "\033[0;33m";
-    const char *reset = "\033[0m";
+    const char *blue;
+    const char *reset;
     char cwd[4096];
     const char *home;
 	int home_len;
 
+	blue = "\033[0;33m";
 	home = "/home/ferafano";
+	reset = "\033[0m";
     home_len = strlen(home);
     if (getcwd(cwd, sizeof(cwd)) != NULL)
     {
@@ -40,12 +40,19 @@ void pwd_prompt(char *path)
         perror("getcwd");
 }
 
-void ft_pwd(char *path)
+int	ft_pwd(char **path)
 {
 	char	pwd[1024];
 	int		i;
+	int		status;
 
-	if (chdir(path) != 0)
+	status = 0;
+	if (path[1] != NULL)
+	{
+		write(2, "pwd: too many arguments\n", 24);
+		status = 1;
+	}
+	else if (chdir(path[1]) != 0)
 	{
  		i = 0;
         getcwd(pwd, sizeof(pwd)); 
@@ -56,6 +63,10 @@ void ft_pwd(char *path)
 		}
     }
 	else
+	{
         perror("cd");
+		status = 1;
+	}
 	write (1, "\n", 1);
+	return (status);
 }
