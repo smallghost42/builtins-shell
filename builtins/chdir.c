@@ -106,10 +106,10 @@ int	ft_cd(char **argv, char **copy_env)
 	getcwd(cwd, sizeof(cwd));
 	if (argv[1] == NULL)
 		change_to_home(cwd, copy_env);
-	else if (argv[1] == NULL && argv[2] == NULL)
+	else if (argv[1] != NULL && argv[2] != NULL)
 	{
 		status = 1;
-		write (2, "too many arguments\n", 19);
+		write (2, "cd : too many arguments\n", 19);
 	}
 	else if (argv[1] && argv[1][0] == '-' && argv[1][1] == '\0')
 		status = change_to_oldpwd(cwd, copy_env);

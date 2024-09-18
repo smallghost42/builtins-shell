@@ -12,17 +12,39 @@
 
 #include "buildin.h"
 
-void	ft_echo(char *message)
+int	ft_echo(char **argv)
 {
 	int	i;
+	int	nl;
+	int	status;
 
-	i = 0;
-	while (message[i])
+	i = 1;
+	nl = 0;
+	status = 0;
+	if (argv[1] && (argv[1][0] == '-' && argv[1][1] == 'n'))
+		nl = 1;
+	if (nl == 1)
+		i = 2;
+	while (argv[i])
 	{
-		write(1, &message[i], 1);
+		printf("%s", argv[i]);
 		i++;
 	}
-	printf("\n");
+	if (nl == 1)
+		printf("\n");
+	return (status);
+}
+
+int	ft_exit(char **argv)
+{
+	if (argv[1] && argv[2] != NULL)
+	{
+		write(2, "exit: too many arguments\n", 24);
+		return (1);
+	}
+	else
+		exit(0);
+	return (0);
 }
 
 int buildin(char **argv, char **copy_env)
@@ -37,14 +59,14 @@ int buildin(char **argv, char **copy_env)
 		status = ft_pwd(argv);
 	else if (strcmp(argv[0], "env") == 0)
 		status = ft_env(copy_env, argv);
-	/*else if (strcmp(argv[0], "unset"))
-		status = ft_unset();
-	else if (strcmp(argv[0], "export"))
-		status = ft_export();
-	else if (strcmp(argv[0], "echo"))
-		status = ft_echo();
-	else if (strcmp(argv[0], "exit"))
-		exit(1);*/
+	//else if (strcmp(argv[0], "unset"))
+	//	status = ft_unset();
+	else if (strcmp(argv[0], "export") == 0)
+		status = ft_export(argv, &copy_env);
+	else if (strcmp(argv[0], "echo") == 0)
+		status = ft_echo(argv);
+	else if (strcmp(argv[0], "exit") == 0)
+		status = ft_exit(argv);
 	else
 	{
 		printf("not a building | cmd : %s | args : %s\n", argv[0], argv[1]);
