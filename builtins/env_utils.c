@@ -19,14 +19,15 @@ int	ft_env(char **copy_env, char **argv)
 
 	i = 0;
 	j = 0;
-	if (argv[1] != NULL)
+	/*if (argv[1] != NULL)
 	{
-		write(2, "pwd: too many arguments\n", 24);
+		write(2, "env: too many arguments\n", 24);
 		return (1);
-	}
-	while (copy_env && copy_env[i])
+	}*/
+	while (copy_env[i])
 	{
-		printf("%s\n", copy_env[i]);
+		if (strchr(copy_env[i], '='))
+			printf("%s\n", copy_env[i]);
 		i++;
 	}
 	return (0);

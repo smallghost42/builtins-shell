@@ -33,23 +33,23 @@ void ft_reassign(char *name, char **to_assign)
     *to_assign = strdup(name);
 }
 
-int create_or_not(char *name, char **exported)
+int create_or_not(char *name, char **env)
 {
     int len;
     int i;
 
     len = strlen(name);
     i = 0;
-    while (exported[i])
+    while (env[i])
     {
-        if (strncmp(exported[i], name, len) == 0 && exported[i][len] == '\0')
+        if (strncmp(env[i], name, len) == 0 && env[i][len] == '\0')
             return (1);
         i++;
     }
     return (0);
 }
 
-char **create_new_export(char *name, char **exported)
+char **create_new_env(char *name, char **env)
 {
     int len;
     int i;
@@ -57,56 +57,35 @@ char **create_new_export(char *name, char **exported)
 
     len = 0;
     i = 0;
-    while (exported[len])
+    while (env && env[len])
         len++;
     copy = malloc((len + 2) * sizeof(char *));
     if (copy == NULL)
         return NULL;
     while (i < len)
     {
-        copy[i] = strdup(exported[i]);
+        copy[i] = strdup(env[i]);
         i++;
     }
     copy[len] = strdup(name);
     copy[len + 1] = NULL;
-    if (exported)
-    {
-        i = 0;
-        while (i < len)
-        {
-            free(exported[i]);
-            i++;
-        }
-        free(exported);
-    }
-    return (copy);
+	return (copy);
 }
 
-int check_if_exist(char *name, char **env, char **exported)
+int check_if_exist(char *name, char **env)
 {
     int i;
     int len;
-    char *equal_sign = strchr(name, '=');
+    char *exist_sign;
 
-    len = equal_sign ? equal_sign - name : strlen(name);
-
+	exist_sign = strchr(name, '=');
+    len = exist_sign ? strlen(exist_sign) - strlen(name) : strlen(name);
     i = 0;
-    while (exported[i])
-    {
-        if (strncmp(exported[i], name, len) == 0 && (exported[i][len] == '=' || exported[i][len] == '\0'))
-        {
-            if (equal_sign)
-                ft_reassign(name, &exported[i]);
-            return (1);
-        }
-        i++;
-    }
-    i = 0;
-    while (env[i])
+    while (env && env[i])
     {
         if (strncmp(env[i], name, len) == 0 && (env[i][len] == '=' || env[i][len] == '\0'))
         {
-            if (equal_sign)
+            if (exist_sign)
                 ft_reassign(name, &env[i]);
             return (1);
         }
@@ -115,27 +94,38 @@ int check_if_exist(char *name, char **env, char **exported)
     return (0);
 }
 
-void ft_export(char *command, char ***existing_export, char **env)
+/*void	print_export(char **exported, char **env)
 {
-    int i;
-    char **to_export;
+	
+}*/
 
-    i = 0;
-    to_export = ft_split(command, ' ');
-    while (to_export[i])
+int ft_export(char **argv, char ***env)
+{
+    int		i;
+	int		status;
+	char	**temp;
+
+    i = 1;
+	status = 0;
+	if (argv[i] == NULL)
+		;//print_export(env);
+    while (argv[i])
     {
-        if (check_valid_name(to_export[i]))
+        if (check_valid_name(argv[i]))
         {
-            if (!check_if_exist(to_export[i], env, *existing_export))
+            if (!check_if_exist(argv[i], *env))
             {
-                if (create_or_not(to_export[i], *existing_export) == 0)
-                    *existing_export = create_new_export(to_export[i], *existing_export);
+                if (create_or_not(argv[i], *env) == 0)
+				{
+					temp = *env;
+                    *env = create_new_env(argv[i], temp);
+				}
             }
         }
         else
             printf("invalid identifier\n");
         i++;
     }
-    //ft_free_split(to_export);
+	return (status);
 }
 

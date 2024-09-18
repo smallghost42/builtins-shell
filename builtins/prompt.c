@@ -44,29 +44,14 @@ int	ft_pwd(char **path)
 {
 	char	pwd[1024];
 	int		i;
-	int		status;
 
-	status = 0;
-	if (path[1] != NULL)
-	{
-		write(2, "pwd: too many arguments\n", 24);
-		status = 1;
-	}
-	else if (chdir(path[1]) != 0)
-	{
- 		i = 0;
-        getcwd(pwd, sizeof(pwd)); 
-		while (pwd[i])
-		{	
-			write(1, &pwd[i], 1);
-			i++;
-		}
-    }
-	else
-	{
-        perror("cd");
-		status = 1;
+	i = 0;
+	getcwd(pwd, sizeof(pwd)); 
+	while (pwd[i])
+	{	
+		write(1, &pwd[i], 1);
+		i++;
 	}
 	write (1, "\n", 1);
-	return (status);
+	return (0);
 }

@@ -35,8 +35,6 @@ int		check_valid_name(char *name);
 void	ft_reassign(char *name, char **to_assign);
 int		create_or_not(char *name, char **exported);
 char	**create_new_export(char *name, char **exported);
-int		check_if_exist(char *name, char **env, char **exported);
-void	ft_export(char *command, char ***existing_export, char **env);
 char	**ft_copy_env(char **envp);
 void	pwd_prompt(char *path);
 char	**ft_rm_env(char **copy_env, int i);
@@ -54,5 +52,7 @@ int		buildin(char **argv, char **copy_env);
 int		ft_cd(char **argv, char **copy_env);
 int		ft_pwd(char **path);
 int		ft_env(char **copy_env, char **argv);
+int		ft_export(char **command, char ***env);
+int		check_if_exist(char *name, char **env);
 
 #endif
