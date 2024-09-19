@@ -79,7 +79,7 @@ int check_if_exist(char *name, char **env)
     char *exist_sign;
 
 	exist_sign = strchr(name, '=');
-    len = exist_sign ? strlen(exist_sign) - strlen(name) : strlen(name);
+    len = exist_sign ? exist_sign - name : strlen(name);
     i = 0;
     while (env && env[i])
     {
@@ -94,11 +94,6 @@ int check_if_exist(char *name, char **env)
     return (0);
 }
 
-/*void	print_export(char **exported, char **env)
-{
-	
-}*/
-
 int ft_export(char **argv, char ***env)
 {
     int		i;
@@ -108,7 +103,7 @@ int ft_export(char **argv, char ***env)
     i = 1;
 	status = 0;
 	if (argv[i] == NULL)
-		;//print_export(env);
+		print_export(*env);
     while (argv[i])
     {
         if (check_valid_name(argv[i]))
