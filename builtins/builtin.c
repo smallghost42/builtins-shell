@@ -47,22 +47,21 @@ int	ft_exit(char **argv)
 	return (0);
 }
 
-int buildin(char **argv, char **copy_env)
+int buildin(char **argv, char ***copy_env)
 {
 	int status;
 
 	status = 0;
-	//printf(" %s | %s | %s\n", argv[0], argv[1], argv[2]);
 	if (strcmp(argv[0], "cd") == 0)
-		status = ft_cd(argv, copy_env);
+		status = ft_cd(argv, *copy_env);
 	else if (strcmp(argv[0], "pwd") == 0)
 		status = ft_pwd(argv);
 	else if (strcmp(argv[0], "env") == 0)
-		status = ft_env(copy_env, argv);
-	//else if (strcmp(argv[0], "unset"))
-	//	status = ft_unset();
+		status = ft_env(*copy_env, argv);
+	else if (strcmp(argv[0], "unset") == 0)
+		status = ft_unset(argv, &*copy_env);
 	else if (strcmp(argv[0], "export") == 0)
-		status = ft_export(argv, &copy_env);
+		status = ft_export(argv, &*copy_env);
 	else if (strcmp(argv[0], "echo") == 0)
 		status = ft_echo(argv);
 	else if (strcmp(argv[0], "exit") == 0)
@@ -98,7 +97,7 @@ int	main(int argc, char *argv[], char *envp[])
 		line_read = readline("\n\033[0;35m❯ \033[0m");
 		add_history(line_read);
 		args = ft_split(line_read, ' ');
-		buildin(args, copy_env);
+		buildin(args, &copy_env);
 	}
 	for (int i = 0; copy_env[i]; i++)
 		free(copy_env[i]);
