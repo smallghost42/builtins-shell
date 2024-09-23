@@ -54,15 +54,29 @@ void	update_oldpwd(char *line_read, char *cwd, char **copy_env)
 	while (copy_env[i])
 	{
 		if (strncmp(copy_env[i], line_read, len) == 0
-			&& copy_env[i][len] == '=')
+			&& (copy_env[i][len] == '=' || copy_env[i][len] == '\0'))
 		{
-			new_value = malloc((len + 1 + strlen(cwd) + 1) * sizeof(char));
-			if (new_value == NULL)
-				return ;
-			strncpy(new_value, copy_env[i], len + 1);
-			strcpy(new_value + len + 1, cwd);
-			copy_env[i] = new_value;
-			break ;
+			if (copy_env[i][len] == '\0')
+			{
+				new_value = malloc((len + 2 + strlen(cwd) + 1) * sizeof(char));
+				if (new_value == NULL)
+					return ;
+				copy_env[i] = ft_strjoin(copy_env[i], "=");
+				strncpy(new_value, copy_env[i], len + 2);
+				strcpy(new_value + len + 1, cwd);
+				copy_env[i] = new_value;
+				break ;
+			}
+			else
+			{
+				new_value = malloc((len + 1 + strlen(cwd) + 1) * sizeof(char));
+				if (new_value == NULL)
+					return ;
+				strncpy(new_value, copy_env[i], len + 1);
+				strcpy(new_value + len + 1, cwd);
+				copy_env[i] = new_value;
+				break ;
+			}
 		}
 		i++;
 	}
@@ -73,7 +87,7 @@ int	change_to_path(char *path, char *cwd, char **copy_env)
 	int status;
 
 	status = 0;
-	if (path[0] == '~' && path[1] == '\0')
+	if (path[0] == '~' && (path[1] == '\0' || (path[1] == '/' && path[2] == '\0')))
 		change_to_home(cwd, copy_env);
 	else if (path[0] == '~')
 	{
@@ -83,7 +97,7 @@ int	change_to_path(char *path, char *cwd, char **copy_env)
 		else
 		{
 			chdir(cwd);
-			perror("cd1");
+			perror("cd");
 			status = 1;
 		}
 	}
@@ -109,12 +123,17 @@ int	ft_cd(char **argv, char **copy_env)
 	else if (argv[1] != NULL && argv[2] != NULL)
 	{
 		status = 1;
-		write (2, "cd : too many arguments\n", 19);
+		write (2, "too many arguments\n", 19);
 	}
 	else if (argv[1] && argv[1][0] == '-' && argv[1][1] == '\0')
 		status = change_to_oldpwd(cwd, copy_env);
 	else
+	{
 		status = change_to_path(argv[1], cwd, copy_env);
+		update_oldpwd("OLDPWD", cwd, copy_env);
+	}
 	write(1, "\n", 1);
+	getcwd(cwd, sizeof(cwd));
+	update_oldpwd("PWD", cwd, copy_env);
 	return (status);
 }
