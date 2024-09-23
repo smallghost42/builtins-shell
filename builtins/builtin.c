@@ -15,16 +15,39 @@
 int	ft_echo(char **argv)
 {
 	int	i;
+	int j;
 	int	nl;
 	int	status;
 
 	i = 1;
 	nl = 0;
 	status = 0;
-	if (argv[1] && (argv[1][0] == '-' && argv[1][1] == 'n'))
-		nl = 1;
-	if (nl == 1)
-		i = 2;
+	while (argv[i])
+	{
+		if (argv[i][0] == '-')
+		{
+			j = 1;
+			while (argv[i][j])
+			{
+				if (argv[i][j] && argv[i][j] == 'n')
+				{
+					nl = 1;
+					j++;
+				}
+				else if (argv[i][j] && argv[i][j] != 'n')
+				{
+					write(2, "echo: invalid flag\n", 19);
+					nl = 2;
+					break ;
+				}
+			}
+		}
+		else
+			break ;
+		if (nl == 2)
+			return (1);
+		i++;
+	}
 	while (argv[i])
 	{
 		printf("%s", argv[i]);

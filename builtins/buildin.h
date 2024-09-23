@@ -31,7 +31,7 @@ char	**ft_split(char const *s, char c);
 size_t	ft_strlen(const char *s);
 char	*ft_strtrim(char const *s1, char const *set);
 void	ft_copy(char *str, char *dest);
-int		check_valid_name(char *name);
+int		check_valid_name(char *name, char ***env);
 void	ft_reassign(char *name, char **to_assign);
 int		create_or_not(char *name, char **exported);
 char	**create_new_export(char *name, char **exported);
@@ -55,5 +55,6 @@ int		ft_export(char **command, char ***env);
 int		check_if_exist(char *name, char **env);
 int		print_export(char **copy_env);
 int		ft_unset(char **argv, char ***copy_env);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif
