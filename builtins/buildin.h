@@ -38,7 +38,7 @@ char	**create_new_export(char *name, char **exported);
 char	**ft_copy_env(char **envp);
 void	pwd_prompt(char *path);
 char	**ft_rm_env(char **copy_env, int i);
-void	get_envp(char *line_read, char **copy_env, char **exported);
+int		get_env_value(char **line_read, char **copy_env);
 void	update_oldpwd(char *line_read, char *cwd, char **copy_env);
 char	*search_envp(char *line_read, char **copy_env);
 void	change_to_home(char *cwd, char **copy_env);

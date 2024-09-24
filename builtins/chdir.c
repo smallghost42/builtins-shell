@@ -84,10 +84,11 @@ void	update_oldpwd(char *line_read, char *cwd, char **copy_env)
 
 int	change_to_path(char *path, char *cwd, char **copy_env)
 {
-	int status;
+	int	status;
 
 	status = 0;
-	if (path[0] == '~' && (path[1] == '\0' || (path[1] == '/' && path[2] == '\0')))
+	if (path[0] == '~' && (path[1] == '\0' || (path[1] == '/'
+				&& path[2] == '\0')))
 		change_to_home(cwd, copy_env);
 	else if (path[0] == '~')
 	{
@@ -123,7 +124,7 @@ int	ft_cd(char **argv, char **copy_env)
 	else if (argv[1] != NULL && argv[2] != NULL)
 	{
 		status = 1;
-		write (2, "too many arguments\n", 19);
+		write(2, "too many arguments\n", 19);
 	}
 	else if (argv[1] && argv[1][0] == '-' && argv[1][1] == '\0')
 		status = change_to_oldpwd(cwd, copy_env);

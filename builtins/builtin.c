@@ -15,7 +15,7 @@
 int	ft_echo(char **argv)
 {
 	int	i;
-	int j;
+	int	j;
 	int	nl;
 	int	status;
 
@@ -70,9 +70,9 @@ int	ft_exit(char **argv)
 	return (0);
 }
 
-int buildin(char **argv, char ***copy_env)
+int	buildin(char **argv, char ***copy_env)
 {
-	int status;
+	int	status;
 
 	status = 0;
 	if (strcmp(argv[0], "cd") == 0)
@@ -87,6 +87,8 @@ int buildin(char **argv, char ***copy_env)
 		status = ft_export(argv, &*copy_env);
 	else if (strcmp(argv[0], "echo") == 0)
 		status = ft_echo(argv);
+	else if (strcmp(argv[0], "get_env") == 0)
+		status = get_env_value(argv, *copy_env);
 	else if (strcmp(argv[0], "exit") == 0)
 		status = ft_exit(argv);
 	else
