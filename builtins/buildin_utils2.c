@@ -75,4 +75,3 @@ char	*ft_strtrim(char const *s1, char const *set)
 	strlcpy(str, &s1[start], end - start + 2);
 	return (str);
 }
-
