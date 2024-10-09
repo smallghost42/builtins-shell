@@ -12,48 +12,53 @@
 
 #include "buildin.h"
 
+void	assign_alloc(t_rem *rm, char **copy_env)
+{
+	rm->len = 0;
+	rm->j = 0;
+	rm->k = 0;
+	rm->l = 0;
+	rm->str_len = 0;
+	while (copy_env[rm->len])
+		rm->len++;
+	rm->copy = (char **)malloc(rm->len * sizeof(char *));
+}
+
+void	ft_wfree(t_rem *rm)
+{
+	while (rm->k < rm->l)
+	{
+		free(rm->copy[rm->k]);
+		rm->k++;
+	}
+}
+
 char	**ft_rm_env(char **copy_env, int i)
 {
-	int		len;
-	int		j;
-	int		l;
-	int		k;
-	int		str_len;
-	char	**copy;
+	t_rem	rm;
 
-	len = 0;
-	j = 0;
-	k = 0;
-	l = 0;
-	str_len = 0;
-	while (copy_env[len])
-		len++;
-	copy = (char **)malloc(len * sizeof(char *));
-	if (copy == NULL)
+	assign_alloc(&rm, copy_env);
+	if (rm.copy == NULL)
 		return (NULL);
-	while (j < len)
+	while (rm.j < rm.len)
 	{
-		if (j != i)
+		if (rm.j != i)
 		{
-			str_len = strlen(copy_env[j]);
-			copy[l] = (char *)malloc((str_len + 1) * sizeof(char));
-			if (copy[l] == NULL)
+			rm.str_len = strlen(copy_env[rm.j]);
+			rm.copy[rm.l] = (char *)malloc((rm.str_len + 1) * sizeof(char));
+			if (rm.copy[rm.l] == NULL)
 			{
-				while (k < l)
-				{
-					free(copy[k]);
-					k++;
-				}
-				free(copy);
+				ft_wfree(&rm);
+				free(rm.copy);
 				return (NULL);
 			}
-			strcpy(copy[l], copy_env[j]);
-			l++;
+			strcpy(rm.copy[rm.l], copy_env[rm.j]);
+			rm.l++;
 		}
-		j++;
+		rm.j++;
 	}
-	copy[l] = NULL;
-	return (copy);
+	rm.copy[rm.l] = NULL;
+	return (rm.copy);
 }
 
 int	ft_unset(char **argv, char ***copy_env)
