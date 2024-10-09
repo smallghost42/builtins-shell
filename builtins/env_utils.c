@@ -68,72 +68,78 @@ void	bubble_sort(char **array, int length)
 	}
 }
 
+void	exec_this(t_print_exp *exp)
+{
+	int j;
+
+	j = 0;
+	printf("declare -x ");
+	while (exp->temp_env[exp->temp_i][j] && exp->temp_env[exp->temp_i][j] != '=')
+	{
+		printf("%c", exp->temp_env[exp->temp_i][j]);
+		j++;
+	}
+	if (exp->temp_env[exp->temp_i][j] == '=' && exp->temp_env[exp->temp_i][j + 1] == '\0')
+		printf("=\"\"\n");
+	else if (exp->temp_env[exp->temp_i][j] == '=' && exp->temp_env[exp->temp_i][j + 1] != '\0')
+	{
+		j++;
+		printf("=\"");
+		while (exp->temp_env[exp->temp_i][j])
+		{
+			if (exp->temp_env[exp->temp_i][j] == '"')
+				printf("\\");
+			printf("%c", exp->temp_env[exp->temp_i][j]);
+			j++;
+		}
+		printf("\"\n");
+	}
+	else
+		printf("\n");
+}
+
+void	sort_free(t_print_exp *exp)
+{
+	exp->temp_env[exp->length] = NULL;
+	bubble_sort(exp->temp_env, exp->length);
+	exp->temp_i = 0;
+	while (exp->temp_env[exp->temp_i])
+	{
+		exec_this(exp);
+		exp->temp_i++;
+	}
+	exp->i = 0;
+	while (exp->temp_env[exp->i])
+	{
+		free(exp->temp_env[exp->i]);
+		exp->i++;
+	}
+	free(exp->temp_env);
+}
+
 int	print_export(char **copy_env)
 {
-	int		i;
-	int		j;
-	int		length;
-	int		temp_i;
-	char	**temp_env;
+	t_print_exp exp;
 
-	length = 0;
-	while (copy_env[length])
-		length++;
-	temp_env = malloc((length + 1) * sizeof(char *));
-	if (!temp_env)
-	{
-		perror("malloc");
+	exp.length = 0;
+	while (copy_env[exp.length])
+		exp.length++;
+	exp.temp_env = malloc((exp.length + 1) * sizeof(char *));
+	if (!exp.temp_env)
 		return (1);
-	}
-	i = 0;
-	while (i < length)
+	exp.i = 0;
+	while (exp.i < exp.length)
 	{
-		temp_env[i] = strdup(copy_env[i]);
-		if (!temp_env[i])
+		exp.temp_env[exp.i] = strdup(copy_env[exp.i]);
+		if (!exp.temp_env[exp.i])
 		{
-			perror("dup error");
-			while (--i >= 0)
-				free(temp_env[i]);
-			free(temp_env);
+			while (--exp.i >= 0)
+				free(exp.temp_env[exp.i]);
+			free(exp.temp_env);
 			return (1);
 		}
-		i++;
+		exp.i++;
 	}
-	temp_env[length] = NULL;
-	bubble_sort(temp_env, length);
-	temp_i = 0;
-	while (temp_env[temp_i])
-	{
-		j = 0;
-		printf("declare -x ");
-		while (temp_env[temp_i][j] && temp_env[temp_i][j] != '=')
-		{
-			printf("%c", temp_env[temp_i][j]);
-			j++;
-		}
-		if (temp_env[temp_i][j] == '=' && temp_env[temp_i][j + 1] == '\0')
-			printf("=\"\"\n");
-		else if (temp_env[temp_i][j] == '=' && temp_env[temp_i][j + 1] != '\0')
-		{
-			j++;
-			printf("=\"");
-			while (temp_env[temp_i][j])
-			{
-				printf("%c", temp_env[temp_i][j]);
-				j++;
-			}
-			printf("\"\n");
-		}
-		else
-			printf("\n");
-		temp_i++;
-	}
-	i = 0;
-	while (temp_env[i])
-	{
-		free(temp_env[i]);
-		i++;
-	}
-	free(temp_env);
+	sort_free(&exp);
 	return (0);
 }

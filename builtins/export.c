@@ -40,78 +40,89 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (new);
 }
 
+int	ft_len(char *name, char *exist_sign)
+{
+	if (exist_sign)
+		return (exist_sign - name);
+	else
+		return (strlen(name));
+}
+
+void	exec_cond(t_ext_stat *ext, char **env)
+{
+	if (env[ext->i][ext->len] == '\0' && env[ext->i][ext->len - 1] != '=')
+	{
+		ext->temp = env[ext->i];
+		env[ext->i] = ft_strjoin(ext->temp, ext->exist_sign);
+	}
+	else
+	{
+		ext->temp = env[ext->i];
+		env[ext->i] = ft_strjoin(ext->temp, ext->exist_sign + 1);
+	}
+}
+
 int	ft_exist_status(char *name, char **env)
 {
-	int		i;
-	int		len;
-	char	*exist_sign;
-	char	*temp;
+	t_ext_stat	ext;
 
-	temp = NULL;
-	exist_sign = strchr(name, '=');
-	len = exist_sign ? exist_sign - name : strlen(name);
-	i = 0;
-	while (env && env[i])
+	ext.temp = NULL;
+	ext.exist_sign = strchr(name, '=');
+	ext.len = ft_len(name, ext.exist_sign);
+	ext.i = 0;
+	while (env && env[ext.i])
 	{
-		if (strncmp(env[i], name, len - 1) == 0 && (env[i][len - 1] == '='
-				|| env[i][len] == '\0'))
+		if (strncmp(env[ext.i], name, ext.len - 1) == 0 && (env[ext.i][ext.len
+				- 1] == '=' || env[ext.i][ext.len] == '\0'))
 		{
-			if (exist_sign)
+			if (ext.exist_sign)
 			{
-				if (env[i][len] == '\0' && env[i][len - 1] != '=')
-				{
-					temp = env[i];
-					env[i] = ft_strjoin(temp, exist_sign);
-				}
-				else
-				{
-					temp = env[i];
-					env[i] = ft_strjoin(temp, exist_sign + 1);
-				}
+				exec_cond(&ext, env);
 				return (2);
 			}
 		}
-		i++;
+		ext.i++;
 	}
 	return (0);
 }
 
+void	crt_copy(t_crt *crt, char *name)
+{
+	while (name[crt->i])
+	{
+		if (name[crt->i] == '+')
+			crt->i++;
+		crt->name1[crt->j] = name[crt->i];
+		crt->j++;
+		crt->i++;
+	}
+}
+
 char	**create_no_plus(char *name, char **env)
 {
-	int		len;
-	int		i;
-	int		j;
-	char	**copy;
-	char	*name1;
+	t_crt	crt;
 
-	len = 0;
-	i = 0;
-	while (env && env[len])
-		len++;
-	copy = malloc((len + 2) * sizeof(char *));
-	if (copy == NULL)
+	crt.len = 0;
+	crt.i = 0;
+	while (env && env[crt.len])
+		crt.len++;
+	crt.copy = malloc((crt.len + 2) * sizeof(char *));
+	if (crt.copy == NULL)
 		return (NULL);
-	while (i < len)
+	while (crt.i < crt.len)
 	{
-		copy[i] = strdup(env[i]);
-		i++;
+		crt.copy[crt.i] = strdup(env[crt.i]);
+		crt.i++;
 	}
-	name1 = malloc((strlen(name)) * sizeof(char));
-	i = 0;
-	j = 0;
-	while (name[i])
-	{
-		if (name[i] == '+')
-			i++;
-		name1[j] = name[i];
-		j++;
-		i++;
-	}
-	name1[j] = '\0';
-	copy[len] = strdup(name1);
-	free(name1);
-	copy[len + 1] = NULL;
-	return (copy);
+	crt.name1 = malloc((strlen(name)) * sizeof(char));
+	crt.i = 0;
+	crt.j = 0;
+	crt_copy(&crt, name);
+	crt.name1[crt.j] = '\0';
+	crt.copy[crt.len] = strdup(crt.name1);
+	free(crt.name1);
+	crt.copy[crt.len + 1] = NULL;
+	return (crt.copy);
 }
 
 int	ft_concat(char *name, char ***env)
@@ -204,12 +215,12 @@ int	check_if_exist(char *name, char **env)
 	char	*exist_sign;
 
 	exist_sign = strchr(name, '=');
-	len = exist_sign ? exist_sign - name : strlen(name);
+	len = ft_len(name, exist_sign);
 	i = 0;
 	while (env && env[i])
 	{
 		if (strncmp(env[i], name, len) == 0 && (env[i][len] == '='
-				|| env[i][len] == '\0'))
+			|| env[i][len] == '\0'))
 		{
 			if (exist_sign)
 				ft_reassign(name, &env[i]);
@@ -218,6 +229,18 @@ int	check_if_exist(char *name, char **env)
 		i++;
 	}
 	return (0);
+}
+
+void	ft_cond(int i, char ***env, char **argv, char **temp)
+{
+	if (!check_if_exist(argv[i], *env))
+	{
+		if (create_or_not(argv[i], *env) == 0)
+		{
+			temp = *env;
+			*env = create_new_env(argv[i], temp);
+		}
+	}
 }
 
 int	ft_export(char **argv, char ***env)
@@ -235,16 +258,7 @@ int	ft_export(char **argv, char ***env)
 	{
 		check = check_valid_name(argv[i], env);
 		if (check == 1)
-		{
-			if (!check_if_exist(argv[i], *env))
-			{
-				if (create_or_not(argv[i], *env) == 0)
-				{
-					temp = *env;
-					*env = create_new_env(argv[i], temp);
-				}
-			}
-		}
+			ft_cond(i, env, argv, temp);
 		else if (check == 0)
 			return (0);
 		else
