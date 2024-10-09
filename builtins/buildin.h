@@ -22,6 +22,40 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+typedef struct s_oldpwd
+{
+	int		i;
+	int		j;
+	int		len;
+	char	*new_value;
+}			t_oldpwd;
+
+typedef struct s_print_exp
+{
+	int		i;
+	int		j;
+	int		length;
+	int		temp_i;
+	char	**temp_env;
+}			t_print_exp;
+
+typedef struct s_ext_stat
+{
+	int		i;
+	int		len;
+	char	*exist_sign;
+	char	*temp;
+}			t_ext_stat;
+
+typedef struct s_crt
+{
+	int		len;
+	int		i;
+	int		j;
+	char	**copy;
+	char	*name1;
+}			t_crt;
+
 int		ft_check_size(char *s, char c);
 int		ft_check_size_array(char *s, char c, int array_indice);
 char	**ft_fill_array(char **new_r, char *s, char c);

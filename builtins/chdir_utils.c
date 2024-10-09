@@ -12,6 +12,34 @@
 
 #include "buildin.h"
 
+int	is_match(char *line_read, char **copy_env)
+{
+	int	i;
+	int	j;
+	int	success;
+
+	success = 0;
+	i = 0;
+	while (copy_env[i])
+	{
+		if (copy_env[i][0] == line_read[0])
+		{
+			j = 1;
+			success = 1;
+			while (line_read[j])
+			{
+				if (copy_env[i][j] != line_read[j])
+					break ;
+				j++;
+			}
+			if (success)
+				return (i);
+		}
+		i++;
+	}
+	return (-1);
+}
+
 void	change_to_home(char *cwd, char **copy_env)
 {
 	update_oldpwd("OLDPWD", cwd, copy_env);

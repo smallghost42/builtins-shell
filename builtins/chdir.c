@@ -12,81 +12,58 @@
 
 #include "buildin.h"
 
-int	is_match(char *line_read, char **copy_env)
+int	this_func(t_oldpwd *var, char **copy_env, char *cwd)
 {
-	int	i;
-	int	j;
-	int	success;
+	var->new_value = malloc((var->len + 2 + strlen(cwd) + 1) * sizeof(char));
+	if (var->new_value == NULL)
+		return (0);
+	copy_env[var->i] = ft_strjoin(copy_env[var->i], "=");
+	strncpy(var->new_value, copy_env[var->i], var->len + 2);
+	strcpy(var->new_value + var->len + 1, cwd);
+	copy_env[var->i] = var->new_value;
+	return (1);
+}
 
-	success = 0;
-	i = 0;
-	while (copy_env[i])
-	{
-		if (copy_env[i][0] == line_read[0])
-		{
-			j = 1;
-			success = 1;
-			while (line_read[j])
-			{
-				if (copy_env[i][j] != line_read[j])
-					break ;
-				j++;
-			}
-			if (success)
-				return (i);
-		}
-		i++;
-	}
-	return (-1);
+int	that_func(t_oldpwd *var, char **copy_env, char *cwd)
+{
+	var->new_value = malloc((var->len + 1 + strlen(cwd) + 1) * sizeof(char));
+	if (var->new_value == NULL)
+		return (0);
+	strncpy(var->new_value, copy_env[var->i], var->len + 1);
+	strcpy(var->new_value + var->len + 1, cwd);
+	copy_env[var->i] = var->new_value;
+	return (1);
 }
 
 void	update_oldpwd(char *line_read, char *cwd, char **copy_env)
 {
-	int		i;
-	int		j;
-	int		len;
-	char	*new_value;
+	t_oldpwd	var;
 
-	len = 0;
-	while (line_read[len] && line_read[len] != '=')
-		len++;
-	i = 0;
-	while (copy_env[i])
+	var.len = 0;
+	while (line_read[var.len] && line_read[var.len] != '=')
+		var.len++;
+	var.i = 0;
+	while (copy_env[var.i])
 	{
-		if (strncmp(copy_env[i], line_read, len) == 0
-			&& (copy_env[i][len] == '=' || copy_env[i][len] == '\0'))
+		if (strncmp(copy_env[var.i], line_read, var.len) == 0
+			&& (copy_env[var.i][var.len] == '='
+			|| copy_env[var.i][var.len] == '\0'))
 		{
-			if (copy_env[i][len] == '\0')
+			if (copy_env[var.i][var.len] == '\0')
 			{
-				new_value = malloc((len + 2 + strlen(cwd) + 1) * sizeof(char));
-				if (new_value == NULL)
+				if (this_func(&var, copy_env, cwd) == 0)
 					return ;
-				copy_env[i] = ft_strjoin(copy_env[i], "=");
-				strncpy(new_value, copy_env[i], len + 2);
-				strcpy(new_value + len + 1, cwd);
-				copy_env[i] = new_value;
-				break ;
 			}
-			else
-			{
-				new_value = malloc((len + 1 + strlen(cwd) + 1) * sizeof(char));
-				if (new_value == NULL)
-					return ;
-				strncpy(new_value, copy_env[i], len + 1);
-				strcpy(new_value + len + 1, cwd);
-				copy_env[i] = new_value;
-				break ;
-			}
+			else if (that_func(&var, copy_env, cwd) == 0)
+				return ;
+			break ;
 		}
-		i++;
+		var.i++;
 	}
 }
 
 int	change_to_path(char *path, char *cwd, char **copy_env)
 {
-	int	status;
-
-	status = 0;
 	if (path[0] == '~' && (path[1] == '\0' || (path[1] == '/'
 				&& path[2] == '\0')))
 		change_to_home(cwd, copy_env);
@@ -99,7 +76,7 @@ int	change_to_path(char *path, char *cwd, char **copy_env)
 		{
 			chdir(cwd);
 			perror("cd");
-			status = 1;
+			return (1);
 		}
 	}
 	else if (chdir(path) == 0)
@@ -107,9 +84,9 @@ int	change_to_path(char *path, char *cwd, char **copy_env)
 	else
 	{
 		perror("cd");
-		status = 1;
+		return (1);
 	}
-	return (status);
+	return (0);
 }
 
 int	ft_cd(char **argv, char **copy_env)
