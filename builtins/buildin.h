@@ -56,6 +56,16 @@ typedef struct s_crt
 	char	*name1;
 }			t_crt;
 
+typedef struct s_rem
+{
+	int		len;
+	int		j;
+	int		l;
+	int		k;
+	int		str_len;
+	char	**copy;
+}			t_rem;
+
 int		ft_check_size(char *s, char c);
 int		ft_check_size_array(char *s, char c, int array_indice);
 char	**ft_fill_array(char **new_r, char *s, char c);
