@@ -6,7 +6,7 @@
 /*   By: ferafano <ferafano@student.42antananarivo  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 08:53:20 by ferafano          #+#    #+#             */
-/*   Updated: 2024/09/16 15:18:19 by ferafano         ###   ########.fr       */
+/*   Updated: 2024/10/10 09:32:06 by ferafano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,15 @@ typedef struct s_rem
 	char	**copy;
 }			t_rem;
 
+typedef struct s_unset
+{
+	int		i;
+	int		l;
+	int		env_name_len;
+	char	**temp;
+	char	*delimiter;
+}			t_unset;
+
 int		ft_check_size(char *s, char c);
 int		ft_check_size_array(char *s, char c, int array_indice);
 char	**ft_fill_array(char **new_r, char *s, char c);
@@ -88,7 +97,6 @@ char	*search_envp(char *line_read, char **copy_env);
 void	change_to_home(char *cwd, char **copy_env);
 int		get_prefix_length(char *line_read);
 int		is_match(char *line_read, char **copy_env);
-
 int		change_to_oldpwd(char *cwd, char **copy_env);
 int		change_to_path(char *path, char *cwd, char **copy_env);
 int		buildin(char **argv, char ***copy_env);
@@ -100,5 +108,11 @@ int		check_if_exist(char *name, char **env);
 int		print_export(char **copy_env);
 int		ft_unset(char **argv, char ***copy_env);
 char	*ft_strjoin(char const *s1, char const *s2);
+int		ft_len(char *name, char *exist_sign);
+void	exec_cond(t_ext_stat *ext, char **env);
+int		ft_exist_status(char *name, char **env);
+void	crt_copy(t_crt *crt, char *name);
+void	cond_loop(t_print_exp *exp, int *j);
+void	bubble_sort(char **array, int length);
 
 #endif
