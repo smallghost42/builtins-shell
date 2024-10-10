@@ -6,7 +6,7 @@
 /*   By: ferafano <ferafano@student.42antananarivo  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:14:28 by ferafano          #+#    #+#             */
-/*   Updated: 2024/09/09 11:56:35 by ferafano         ###   ########.fr       */
+/*   Updated: 2024/10/10 08:05:53 by ferafano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,41 +61,44 @@ char	**ft_rm_env(char **copy_env, int i)
 	return (rm.copy);
 }
 
+int	un_set(t_unset *unset, char ***copy_env, char **argv)
+{
+	unset->delimiter = strchr((*copy_env)[unset->i], '=');
+	if (unset->delimiter)
+		unset->env_name_len = (int)(unset->delimiter - (*copy_env)[unset->i]);
+	else
+		unset->env_name_len = strlen((*copy_env)[unset->i]);
+	if (strncmp((*copy_env)[unset->i], argv[unset->l], unset->env_name_len) == 0
+		&& argv[unset->l][unset->env_name_len] == '\0')
+	{
+		unset->temp = *copy_env;
+		*copy_env = ft_rm_env(unset->temp, unset->i);
+		return (0);
+	}
+	return (1);
+}
+
 int	ft_unset(char **argv, char ***copy_env)
 {
-	int		i;
-	int		l;
-	int		env_name_len;
-	char	**temp;
-	char	*delimiter;
+	t_unset	unset;
 
-	l = 0;
-	env_name_len = 0;
-	while (argv[l])
+	unset.l = 0;
+	unset.env_name_len = 0;
+	while (argv[unset.l])
 	{
-		if (strchr(argv[l], '=') != NULL || strlen(argv[l]) == 0)
+		if (strchr(argv[unset.l], '=') != NULL || strlen(argv[unset.l]) == 0)
 		{
-			l++;
+			unset.l++;
 			continue ;
 		}
-		i = 0;
-		while ((*copy_env)[i])
+		unset.i = 0;
+		while ((*copy_env)[unset.i])
 		{
-			delimiter = strchr((*copy_env)[i], '=');
-			if (delimiter)
-				env_name_len = (int)(delimiter - (*copy_env)[i]);
-			else
-				env_name_len = strlen((*copy_env)[i]);
-			if (strncmp((*copy_env)[i], argv[l], env_name_len) == 0
-				&& argv[l][env_name_len] == '\0')
-			{
-				temp = *copy_env;
-				*copy_env = ft_rm_env(temp, i);
+			if (un_set(&unset, copy_env, argv) == 0)
 				break ;
-			}
-			i++;
+			unset.i++;
 		}
-		l++;
+		unset.l++;
 	}
 	return (0);
 }
