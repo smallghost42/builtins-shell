@@ -40,18 +40,14 @@ void	pwd_prompt(char *path)
 		perror("getcwd");
 }
 
-int	ft_pwd(char **path)
+int	ft_pwd(char **path, int fd)
 {
 	char	pwd[1024];
 	int		i;
 
 	i = 0;
 	getcwd(pwd, sizeof(pwd));
-	while (pwd[i])
-	{
-		write(1, &pwd[i], 1);
-		i++;
-	}
+	ft_putstr_fd(pwd, fd);
 	write(1, "\n", 1);
 	return (0);
 }

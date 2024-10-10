@@ -12,7 +12,7 @@
 
 #include "buildin.h"
 
-int	ft_env(char **copy_env, char **argv)
+int	ft_env(char **copy_env, char **argv, int fd)
 {
 	int	i;
 	int	j;
@@ -27,7 +27,10 @@ int	ft_env(char **copy_env, char **argv)
 	while (copy_env[i])
 	{
 		if (strchr(copy_env[i], '='))
-			printf("%s\n", copy_env[i]);
+		{
+			ft_putstr_fd(copy_env[i], fd);
+			ft_putchar_fd('\n', fd);
+		}
 		i++;
 	}
 	return (0);
@@ -68,13 +71,13 @@ void	bubble_sort(char **array, int length)
 	}
 }
 
-void	cond_loop(t_print_exp *exp, int *j)
+void	cond_loop(t_print_exp *exp, int *j, int fd)
 {
 	while (exp->temp_env[exp->temp_i][*j])
 	{
 		if (exp->temp_env[exp->temp_i][*j] == '"')
-			printf("\\");
-		printf("%c", exp->temp_env[exp->temp_i][*j]);
+			ft_putstr_fd("\\", fd);
+		ft_putchar_fd(exp->temp_env[exp->temp_i][*j], fd);
 		(*j)++;
 	}
 }

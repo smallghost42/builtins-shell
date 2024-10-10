@@ -12,34 +12,6 @@
 
 #include "buildin.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	size_t	len;
-	char	*new;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	len = strlen(s1) + strlen(s2);
-	new = malloc(len + 1);
-	if (new == NULL)
-		return (NULL);
-	while (s1[i] != '\0')
-	{
-		new[i] = s1[i];
-		i++;
-	}
-	while (s2[j] != '\0')
-	{
-		new[i] = s2[j];
-		i++;
-		j++;
-	}
-	new[i] = '\0';
-	return (new);
-}
-
 int	ft_len(char *name, char *exist_sign)
 {
 	if (exist_sign)

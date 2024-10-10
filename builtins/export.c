@@ -86,7 +86,7 @@ void	ft_cond(int i, char ***env, char **argv, char **temp)
 	}
 }
 
-int	ft_export(char **argv, char ***env)
+int	ft_export(char **argv, char ***env, int fd)
 {
 	int		i;
 	int		status;
@@ -96,7 +96,7 @@ int	ft_export(char **argv, char ***env)
 	i = 1;
 	status = 0;
 	if (argv[i] == NULL)
-		print_export(*env);
+		print_export(*env, fd);
 	while (argv[i])
 	{
 		check = check_valid_name(argv[i], env);
