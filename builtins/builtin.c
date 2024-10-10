@@ -12,50 +12,28 @@
 
 #include "buildin.h"
 
-int	ft_echo(char **argv)
+int ft_echo(char **argv, int fd)
 {
-	int	i;
-	int	j;
-	int	nl;
-	int	status;
+    int i;
+    int nl;
 
 	i = 1;
-	nl = 0;
-	status = 0;
-	while (argv[i])
-	{
-		if (argv[i][0] == '-')
-		{
-			j = 1;
-			while (argv[i][j])
-			{
-				if (argv[i][j] && argv[i][j] == 'n')
-				{
-					nl = 1;
-					j++;
-				}
-				else if (argv[i][j] && argv[i][j] != 'n')
-				{
-					write(2, "echo: invalid flag\n", 19);
-					nl = 2;
-					break ;
-				}
-			}
-		}
-		else
-			break ;
-		if (nl == 2)
-			return (1);
-		i++;
-	}
-	while (argv[i])
-	{
-		printf("%s", argv[i]);
-		i++;
-	}
-	if (nl == 1)
-		printf("\n");
-	return (status);
+	nl = 1;
+    while (argv[i] && argv[i][0] == '-' && argv[i][1] == 'n' && argv[i][2] == '\0')
+    {
+        nl = 0;
+        i++;
+    }
+    while (argv[i])
+    {
+		ft_putstr_fd(argv[i], fd);
+        if (argv[i + 1])
+            ft_putchar_fd(' ', fd);
+        i++;
+    }
+    if (nl)
+        ft_putchar_fd('\n', fd);
+    return 0;
 }
 
 int	ft_exit(char **argv)
@@ -70,7 +48,7 @@ int	ft_exit(char **argv)
 	return (0);
 }
 
-int	buildin(char **argv, char ***copy_env)
+int	buildin(char **argv, char ***copy_env, int fd)
 {
 	int	status;
 
@@ -78,15 +56,15 @@ int	buildin(char **argv, char ***copy_env)
 	if (strcmp(argv[0], "cd") == 0)
 		status = ft_cd(argv, *copy_env);
 	else if (strcmp(argv[0], "pwd") == 0)
-		status = ft_pwd(argv);
+		status = ft_pwd(argv, fd);
 	else if (strcmp(argv[0], "env") == 0)
-		status = ft_env(*copy_env, argv);
+		status = ft_env(*copy_env, argv, fd);
 	else if (strcmp(argv[0], "unset") == 0)
 		status = ft_unset(argv, &*copy_env);
 	else if (strcmp(argv[0], "export") == 0)
-		status = ft_export(argv, &*copy_env);
+		status = ft_export(argv, &*copy_env, fd);
 	else if (strcmp(argv[0], "echo") == 0)
-		status = ft_echo(argv);
+		status = ft_echo(argv, fd);
 	else if (strcmp(argv[0], "get_env") == 0)
 		status = get_env_value(argv, *copy_env);
 	else if (strcmp(argv[0], "exit") == 0)
@@ -122,7 +100,8 @@ int	main(int argc, char *argv[], char *envp[])
 		line_read = readline("\n\033[0;35m❯ \033[0m");
 		add_history(line_read);
 		args = ft_split(line_read, ' ');
-		buildin(args, &copy_env);
+		int fd = open("test", O_RDWR | O_TRUNC);
+		buildin(args, &copy_env, fd);
 	}
 	for (int i = 0; copy_env[i]; i++)
 		free(copy_env[i]);

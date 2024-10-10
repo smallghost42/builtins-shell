@@ -12,7 +12,7 @@
 
 #ifndef BUILDIN_H
 # define BUILDIN_H
-
+# include "./libft/libft.h"
 # include <ctype.h>
 # include <string.h>
 # include <unistd.h>
@@ -99,20 +99,22 @@ int		get_prefix_length(char *line_read);
 int		is_match(char *line_read, char **copy_env);
 int		change_to_oldpwd(char *cwd, char **copy_env);
 int		change_to_path(char *path, char *cwd, char **copy_env);
-int		buildin(char **argv, char ***copy_env);
 int		ft_cd(char **argv, char **copy_env);
-int		ft_pwd(char **path);
-int		ft_env(char **copy_env, char **argv);
-int		ft_export(char **command, char ***env);
+int		ft_pwd(char **path, int fd);
+int		ft_env(char **copy_env, char **argv, int fd);
+int		ft_export(char **command, char ***env, int fd);
 int		check_if_exist(char *name, char **env);
-int		print_export(char **copy_env);
+int		print_export(char **copy_env, int fd);
 int		ft_unset(char **argv, char ***copy_env);
-char	*ft_strjoin(char const *s1, char const *s2);
 int		ft_len(char *name, char *exist_sign);
 void	exec_cond(t_ext_stat *ext, char **env);
 int		ft_exist_status(char *name, char **env);
 void	crt_copy(t_crt *crt, char *name);
-void	cond_loop(t_print_exp *exp, int *j);
+void	cond_loop(t_print_exp *exp, int *j, int fd);
 void	bubble_sort(char **array, int length);
+
+/////////////////////////////////////////////////////////
+
+int		buildin(char **argv, char ***copy_env, int fd);
 
 #endif
