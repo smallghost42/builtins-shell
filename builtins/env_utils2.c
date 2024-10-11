@@ -26,7 +26,7 @@ int	ft_env(char **copy_env, char **argv, int fd)
 	}
 	while (copy_env[i])
 	{
-		if (strchr(copy_env[i], '='))
+		if (ft_strchr(copy_env[i], '='))
 		{
 			ft_putstr_fd(copy_env[i], fd);
 			ft_putchar_fd('\n', fd);
@@ -58,7 +58,7 @@ void	bubble_sort(char **array, int length)
 		j = 0;
 		while (j < length - i - 1)
 		{
-			if (strcmp(array[j], array[j + 1]) > 0)
+			if (ft_strcmp4(array[j], array[j + 1]) > 0)
 			{
 				swap(&array[j], &array[j + 1]);
 				swapped = 1;

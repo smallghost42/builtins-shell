@@ -14,7 +14,7 @@
 
 int	this_func(t_oldpwd *var, char **copy_env, char *cwd)
 {
-	var->new_value = malloc((var->len + 2 + strlen(cwd) + 1) * sizeof(char));
+	var->new_value = malloc((var->len + 2 + ft_strlen(cwd) + 1) * sizeof(char));
 	if (var->new_value == NULL)
 		return (0);
 	copy_env[var->i] = ft_strjoin(copy_env[var->i], "=");
@@ -26,7 +26,7 @@ int	this_func(t_oldpwd *var, char **copy_env, char *cwd)
 
 int	that_func(t_oldpwd *var, char **copy_env, char *cwd)
 {
-	var->new_value = malloc((var->len + 1 + strlen(cwd) + 1) * sizeof(char));
+	var->new_value = malloc((var->len + 1 + ft_strlen(cwd) + 1) * sizeof(char));
 	if (var->new_value == NULL)
 		return (0);
 	strncpy(var->new_value, copy_env[var->i], var->len + 1);
@@ -45,7 +45,7 @@ void	update_oldpwd(char *line_read, char *cwd, char **copy_env)
 	var.i = 0;
 	while (copy_env[var.i])
 	{
-		if (strncmp(copy_env[var.i], line_read, var.len) == 0
+		if (ft_strncmp(copy_env[var.i], line_read, var.len) == 0
 			&& (copy_env[var.i][var.len] == '='
 			|| copy_env[var.i][var.len] == '\0'))
 		{

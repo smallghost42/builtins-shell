@@ -48,7 +48,7 @@ char	**ft_copy_env_content(char **envp, char **copy, int len)
 	k = 0;
 	while (j < len)
 	{
-		str_len = strlen(envp[j]);
+		str_len = ft_strlen(envp[j]);
 		copy[j] = (char *)malloc((str_len + 1) * sizeof(char));
 		if (copy[j] == NULL)
 		{

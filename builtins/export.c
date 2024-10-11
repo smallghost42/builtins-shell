@@ -17,11 +17,11 @@ int	create_or_not(char *name, char **env)
 	int	len;
 	int	i;
 
-	len = strlen(name);
+	len = ft_strlen(name);
 	i = 0;
 	while (env[i])
 	{
-		if (strncmp(env[i], name, len) == 0 && env[i][len] == '\0')
+		if (ft_strncmp(env[i], name, len) == 0 && env[i][len] == '\0')
 			return (1);
 		i++;
 	}
@@ -43,10 +43,10 @@ char	**create_new_env(char *name, char **env)
 		return (NULL);
 	while (i < len)
 	{
-		copy[i] = strdup(env[i]);
+		copy[i] = ft_strdup(env[i]);
 		i++;
 	}
-	copy[len] = strdup(name);
+	copy[len] = ft_strdup(name);
 	copy[len + 1] = NULL;
 	return (copy);
 }
@@ -57,12 +57,12 @@ int	check_if_exist(char *name, char **env)
 	int		len;
 	char	*exist_sign;
 
-	exist_sign = strchr(name, '=');
+	exist_sign = ft_strchr(name, '=');
 	len = ft_len(name, exist_sign);
 	i = 0;
 	while (env && env[i])
 	{
-		if (strncmp(env[i], name, len) == 0 && (env[i][len] == '='
+		if (ft_strncmp(env[i], name, len) == 0 && (env[i][len] == '='
 			|| env[i][len] == '\0'))
 		{
 			if (exist_sign)
@@ -95,6 +95,7 @@ int	ft_export(char **argv, char ***env, int fd)
 
 	i = 1;
 	status = 0;
+	temp = NULL;
 	if (argv[i] == NULL)
 		print_export(*env, fd);
 	while (argv[i])
@@ -103,7 +104,7 @@ int	ft_export(char **argv, char ***env, int fd)
 		if (check == 1)
 			ft_cond(i, env, argv, temp);
 		else if (check == 0)
-			return (0);
+			;
 		else
 			printf("invalid identifier\n");
 		i++;

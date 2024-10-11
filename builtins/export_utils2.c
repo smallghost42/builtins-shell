@@ -25,15 +25,15 @@ char	**create_no_plus(char *name, char **env)
 		return (NULL);
 	while (crt.i < crt.len)
 	{
-		crt.copy[crt.i] = strdup(env[crt.i]);
+		crt.copy[crt.i] = ft_strdup(env[crt.i]);
 		crt.i++;
 	}
-	crt.name1 = malloc((strlen(name)) * sizeof(char));
+	crt.name1 = malloc((ft_strlen(name)) * sizeof(char));
 	crt.i = 0;
 	crt.j = 0;
 	crt_copy(&crt, name);
 	crt.name1[crt.j] = '\0';
-	crt.copy[crt.len] = strdup(crt.name1);
+	crt.copy[crt.len] = ft_strdup(crt.name1);
 	free(crt.name1);
 	crt.copy[crt.len + 1] = NULL;
 	return (crt.copy);
@@ -62,7 +62,7 @@ int	check_valid_name(char *name, char ***env)
 	int	status;
 
 	i = 0;
-	if ((!isalpha(name[0]) && name[0] != '_'))
+	if ((!ft_isalpha(name[0]) && name[0] != '_'))
 		return (-1);
 	while (name[++i] && name[i] != '=')
 	{
@@ -71,7 +71,7 @@ int	check_valid_name(char *name, char ***env)
 			status = ft_concat(name, env);
 			return (0);
 		}
-		if ((!isalnum(name[i]) && name[i] != '_'))
+		if ((!ft_isalnum(name[i]) && name[i] != '_'))
 			return (-1);
 	}
 	return (1);
@@ -80,5 +80,5 @@ int	check_valid_name(char *name, char ***env)
 void	ft_reassign(char *name, char **to_assign)
 {
 	free(*to_assign);
-	*to_assign = strdup(name);
+	*to_assign = ft_strdup(name);
 }

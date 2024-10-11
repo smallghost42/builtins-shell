@@ -71,7 +71,7 @@ int	print_export(char **copy_env, int fd)
 	exp.i = 0;
 	while (exp.i < exp.length)
 	{
-		exp.temp_env[exp.i] = strdup(copy_env[exp.i]);
+		exp.temp_env[exp.i] = ft_strdup(copy_env[exp.i]);
 		if (!exp.temp_env[exp.i])
 		{
 			while (--exp.i >= 0)
