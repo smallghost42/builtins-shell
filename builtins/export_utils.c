@@ -17,7 +17,7 @@ int	ft_len(char *name, char *exist_sign)
 	if (exist_sign)
 		return (exist_sign - name);
 	else
-		return (strlen(name));
+		return (ft_strlen(name));
 }
 
 void	exec_cond(t_ext_stat *ext, char **env)
@@ -39,12 +39,12 @@ int	ft_exist_status(char *name, char **env)
 	t_ext_stat	ext;
 
 	ext.temp = NULL;
-	ext.exist_sign = strchr(name, '=');
+	ext.exist_sign = ft_strchr(name, '=');
 	ext.len = ft_len(name, ext.exist_sign);
 	ext.i = 0;
 	while (env && env[ext.i])
 	{
-		if (strncmp(env[ext.i], name, ext.len - 1) == 0 && (env[ext.i][ext.len
+		if (ft_strncmp(env[ext.i], name, ext.len - 1) == 0 && (env[ext.i][ext.len
 				- 1] == '=' || env[ext.i][ext.len] == '\0'))
 		{
 			if (ext.exist_sign)

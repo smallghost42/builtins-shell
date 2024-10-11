@@ -12,7 +12,7 @@
 
 #include "buildin.h"
 
-void	pwd_prompt(char *path)
+void	pwd_prompt(void)
 {
 	const char	*blue;
 	const char	*reset;
@@ -26,21 +26,21 @@ void	pwd_prompt(char *path)
 	home_len = strlen(home);
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
-		write(1, blue, strlen(blue));
-		if (strncmp(cwd, home, home_len) == 0)
+		write(1, blue, ft_strlen(blue));
+		if (ft_strncmp(cwd, home, home_len) == 0)
 		{
 			write(1, "~", 1);
-			write(1, cwd + home_len, strlen(cwd) - home_len);
+			write(1, cwd + home_len, ft_strlen(cwd) - home_len);
 		}
 		else
-			write(1, cwd, strlen(cwd));
-		write(1, reset, strlen(reset));
+			write(1, cwd, ft_strlen(cwd));
+		write(1, reset, ft_strlen(reset));
 	}
 	else
 		perror("getcwd");
 }
 
-int	ft_pwd(char **path, int fd)
+int	ft_pwd(int fd)
 {
 	char	pwd[1024];
 	int		i;

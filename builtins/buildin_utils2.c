@@ -75,3 +75,13 @@ char	*ft_strtrim(char const *s1, char const *set)
 	strlcpy(str, &s1[start], end - start + 2);
 	return (str);
 }
+
+int	ft_strcmp4(const char *str1, const char *str2)
+{
+    while (*str1 && (*str1 == *str2))
+	{
+        str1++;
+        str2++;
+    }
+    return *(unsigned char *)str1 - *(unsigned char *)str2;
+}

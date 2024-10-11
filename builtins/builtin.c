@@ -11,25 +11,56 @@
 /* ************************************************************************** */
 
 #include "buildin.h"
-//hello
+
+int	is_valid_flag(char *argv)
+{
+	int	i;
+	int	ok;
+
+	i = 1;
+	ok = 0;
+	while (argv[i] && argv[0] == '-')
+	{
+		if (argv[i] == 'n')
+			ok = 1;
+		else
+			return (0);
+		i++;
+	}
+	if (ok == 1)
+		return (1);
+	else
+		return (0);
+}
+
 int ft_echo(char **argv, int fd)
 {
     int i;
+	int j;
     int nl;
+	int	index;
 
 	i = 1;
 	nl = 1;
-    while (argv[i] && argv[i][0] == '-' && argv[i][1] == 'n' && argv[i][2] == '\0')
+	index = 1;
+	while (argv[i])
+	{
+		j = 1;
+		if (argv[1][0] == '-' && is_valid_flag(argv[i]) == 1)
+		{
+			index = i + 1;
+			nl = 0;
+		}
+		else
+			break;
+		i++;
+	}
+    while (argv[index])
     {
-        nl = 0;
-        i++;
-    }
-    while (argv[i])
-    {
-		ft_putstr_fd(argv[i], fd);
-        if (argv[i + 1])
+		ft_putstr_fd(argv[index], fd);
+        if (argv[index + 1])
             ft_putchar_fd(' ', fd);
-        i++;
+        index++;
     }
     if (nl)
         ft_putchar_fd('\n', fd);
@@ -50,24 +81,25 @@ int	ft_exit(char **argv)
 
 int	buildin(char **argv, char ***copy_env, int fd)
 {
-	int	status;
+	int		status;
+	char	*value_env;
 
 	status = 0;
-	if (strcmp(argv[0], "cd") == 0)
+	if (ft_strcmp4(argv[0], "cd") == 0)
 		status = ft_cd(argv, *copy_env);
-	else if (strcmp(argv[0], "pwd") == 0)
-		status = ft_pwd(argv, fd);
-	else if (strcmp(argv[0], "env") == 0)
+	else if (ft_strcmp4(argv[0], "pwd") == 0)
+		status = ft_pwd(fd);
+	else if (ft_strcmp4(argv[0], "env") == 0)
 		status = ft_env(*copy_env, argv, fd);
-	else if (strcmp(argv[0], "unset") == 0)
+	else if (ft_strcmp4(argv[0], "unset") == 0)
 		status = ft_unset(argv, &*copy_env);
-	else if (strcmp(argv[0], "export") == 0)
+	else if (ft_strcmp4(argv[0], "export") == 0)
 		status = ft_export(argv, &*copy_env, fd);
-	else if (strcmp(argv[0], "echo") == 0)
+	else if (ft_strcmp4(argv[0], "echo") == 0)
 		status = ft_echo(argv, fd);
-	else if (strcmp(argv[0], "get_env") == 0)
-		status = get_env_value(argv, *copy_env);
-	else if (strcmp(argv[0], "exit") == 0)
+	else if (ft_strcmp4(argv[0], "get_env") == 0)
+		value_env = get_env_value(argv, *copy_env);
+	else if (ft_strcmp4(argv[0], "exit") == 0)
 		status = ft_exit(argv);
 	else
 	{
@@ -96,12 +128,12 @@ int	main(int argc, char *argv[], char *envp[])
 			free(line_read);
 			line_read = NULL;
 		}
-		pwd_prompt("pwd");
+		pwd_prompt();
 		line_read = readline("\n\033[0;35m❯ \033[0m");
 		add_history(line_read);
 		args = ft_split(line_read, ' ');
-		int fd = open("test", O_RDWR | O_TRUNC);
-		buildin(args, &copy_env, fd);
+		//int fd = open("test", O_RDWR | O_TRUNC);
+		buildin(args, &copy_env, 1);
 	}
 	for (int i = 0; copy_env[i]; i++)
 		free(copy_env[i]);

@@ -44,7 +44,7 @@ char	**ft_rm_env(char **copy_env, int i)
 	{
 		if (rm.j != i)
 		{
-			rm.str_len = strlen(copy_env[rm.j]);
+			rm.str_len = ft_strlen(copy_env[rm.j]);
 			rm.copy[rm.l] = (char *)malloc((rm.str_len + 1) * sizeof(char));
 			if (rm.copy[rm.l] == NULL)
 			{
@@ -63,12 +63,12 @@ char	**ft_rm_env(char **copy_env, int i)
 
 int	un_set(t_unset *unset, char ***copy_env, char **argv)
 {
-	unset->delimiter = strchr((*copy_env)[unset->i], '=');
+	unset->delimiter = ft_strchr((*copy_env)[unset->i], '=');
 	if (unset->delimiter)
 		unset->env_name_len = (int)(unset->delimiter - (*copy_env)[unset->i]);
 	else
-		unset->env_name_len = strlen((*copy_env)[unset->i]);
-	if (strncmp((*copy_env)[unset->i], argv[unset->l], unset->env_name_len) == 0
+		unset->env_name_len = ft_strlen((*copy_env)[unset->i]);
+	if (ft_strncmp((*copy_env)[unset->i], argv[unset->l], unset->env_name_len) == 0
 		&& argv[unset->l][unset->env_name_len] == '\0')
 	{
 		unset->temp = *copy_env;
@@ -86,7 +86,7 @@ int	ft_unset(char **argv, char ***copy_env)
 	unset.env_name_len = 0;
 	while (argv[unset.l])
 	{
-		if (strchr(argv[unset.l], '=') != NULL || strlen(argv[unset.l]) == 0)
+		if (ft_strchr(argv[unset.l], '=') != NULL || ft_strlen(argv[unset.l]) == 0)
 		{
 			unset.l++;
 			continue ;

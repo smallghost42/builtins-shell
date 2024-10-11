@@ -89,9 +89,9 @@ void	ft_reassign(char *name, char **to_assign);
 int		create_or_not(char *name, char **exported);
 char	**create_new_export(char *name, char **exported);
 char	**ft_copy_env(char **envp);
-void	pwd_prompt(char *path);
+void	pwd_prompt(void);
 char	**ft_rm_env(char **copy_env, int i);
-int		get_env_value(char **line_read, char **copy_env);
+char	*get_env_value(char **line_read, char **copy_env);
 void	update_oldpwd(char *line_read, char *cwd, char **copy_env);
 char	*search_envp(char *line_read, char **copy_env);
 void	change_to_home(char *cwd, char **copy_env);
@@ -100,7 +100,7 @@ int		is_match(char *line_read, char **copy_env);
 int		change_to_oldpwd(char *cwd, char **copy_env);
 int		change_to_path(char *path, char *cwd, char **copy_env);
 int		ft_cd(char **argv, char **copy_env);
-int		ft_pwd(char **path, int fd);
+int		ft_pwd(int fd);
 int		ft_env(char **copy_env, char **argv, int fd);
 int		ft_export(char **command, char ***env, int fd);
 int		check_if_exist(char *name, char **env);
@@ -112,6 +112,7 @@ int		ft_exist_status(char *name, char **env);
 void	crt_copy(t_crt *crt, char *name);
 void	cond_loop(t_print_exp *exp, int *j, int fd);
 void	bubble_sort(char **array, int length);
+int		ft_strcmp4(const char *str1, const char *str2);
 
 /////////////////////////////////////////////////////////
 
