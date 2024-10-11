@@ -85,3 +85,13 @@ int	ft_strcmp4(const char *str1, const char *str2)
     }
     return *(unsigned char *)str1 - *(unsigned char *)str2;
 }
+
+char *ft_strcpy(char *dest, const char *src)
+{
+    char *original_dest;
+
+	original_dest = dest;
+    while ((*dest++ = *src++) != '\0')
+		;
+    return (original_dest);
+}

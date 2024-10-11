@@ -19,7 +19,7 @@ int	this_func(t_oldpwd *var, char **copy_env, char *cwd)
 		return (0);
 	copy_env[var->i] = ft_strjoin(copy_env[var->i], "=");
 	strncpy(var->new_value, copy_env[var->i], var->len + 2);
-	strcpy(var->new_value + var->len + 1, cwd);
+	ft_strcpy(var->new_value + var->len + 1, cwd);
 	copy_env[var->i] = var->new_value;
 	return (1);
 }
@@ -30,7 +30,7 @@ int	that_func(t_oldpwd *var, char **copy_env, char *cwd)
 	if (var->new_value == NULL)
 		return (0);
 	strncpy(var->new_value, copy_env[var->i], var->len + 1);
-	strcpy(var->new_value + var->len + 1, cwd);
+	ft_strcpy(var->new_value + var->len + 1, cwd);
 	copy_env[var->i] = var->new_value;
 	return (1);
 }
