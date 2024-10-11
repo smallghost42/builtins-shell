@@ -113,6 +113,7 @@ void	crt_copy(t_crt *crt, char *name);
 void	cond_loop(t_print_exp *exp, int *j, int fd);
 void	bubble_sort(char **array, int length);
 int		ft_strcmp4(const char *str1, const char *str2);
+char	*ft_strcpy(char *dest, const char *src);
 
 /////////////////////////////////////////////////////////
 
