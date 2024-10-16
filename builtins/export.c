@@ -106,7 +106,10 @@ int	ft_export(char **argv, char ***env, int fd)
 		else if (check == 0)
 			;
 		else
+		{
 			printf("invalid identifier\n");
+			status = 1;
+		}
 		i++;
 	}
 	return (status);

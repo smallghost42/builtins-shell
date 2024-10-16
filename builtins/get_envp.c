@@ -12,7 +12,7 @@
 
 #include "buildin.h"
 
-char	*get_env_value(char **line_read, char **copy_env)
+char	*get_env_value(char *line_read, char **copy_env)
 {
 	int	i;
 	int	j;
@@ -20,18 +20,18 @@ char	*get_env_value(char **line_read, char **copy_env)
 	int	len;
 
 	len = 0;
-	while (line_read[1][len] && line_read[1][len] != '=')
+	while (line_read[len] && line_read[len] != '=')
 		len++;
 	i = 0;
 	success = 0;
 	while (copy_env[i])
 	{
-		if (copy_env[i][0] == line_read[1][0])
+		if (copy_env[i][0] == line_read[0])
 		{
 			j = 1;
 			while (line_read[j])
 			{
-				if (copy_env[i][j] != line_read[1][j])
+				if (copy_env[i][j] != line_read[j])
 				{
 					success = 0;
 					break ;
@@ -48,5 +48,5 @@ char	*get_env_value(char **line_read, char **copy_env)
 		}
 		i++;
 	}
-	return (0);
+	return (NULL);
 }

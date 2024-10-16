@@ -6,7 +6,7 @@
 /*   By: ferafano <ferafano@student.42antananarivo  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 08:53:20 by ferafano          #+#    #+#             */
-/*   Updated: 2024/10/10 09:32:06 by ferafano         ###   ########.fr       */
+/*   Updated: 2024/10/14 10:45:12 by ferafano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,10 @@ char	**create_new_export(char *name, char **exported);
 char	**ft_copy_env(char **envp);
 void	pwd_prompt(void);
 char	**ft_rm_env(char **copy_env, int i);
-char	*get_env_value(char **line_read, char **copy_env);
+char	*get_env_value(char *line_read, char **copy_env);
 void	update_oldpwd(char *line_read, char *cwd, char **copy_env);
 char	*search_envp(char *line_read, char **copy_env);
-void	change_to_home(char *cwd, char **copy_env);
+int	change_to_home(char *cwd, char **copy_env, char *home);
 int		get_prefix_length(char *line_read);
 int		is_match(char *line_read, char **copy_env);
 int		change_to_oldpwd(char *cwd, char **copy_env);
@@ -114,6 +114,7 @@ void	cond_loop(t_print_exp *exp, int *j, int fd);
 void	bubble_sort(char **array, int length);
 int		ft_strcmp4(const char *str1, const char *str2);
 char	*ft_strcpy(char *dest, const char *src);
+char	*ft_strncpy(char *dest, const char *src, size_t n);
 
 /////////////////////////////////////////////////////////
 
