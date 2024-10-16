@@ -40,10 +40,15 @@ int	is_match(char *line_read, char **copy_env)
 	return (-1);
 }
 
-void	change_to_home(char *cwd, char **copy_env)
+int	change_to_home(char *cwd, char **copy_env, char *home)
 {
 	update_oldpwd("OLDPWD", cwd, copy_env);
-	chdir("/home/ferafano/");
+	if (!chdir("home"))
+	{
+		perror("cd");
+		return (1);
+	}
+	return (0);
 }
 
 int	change_to_oldpwd(char *cwd, char **copy_env)

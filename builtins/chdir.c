@@ -6,7 +6,7 @@
 /*   By: ferafano <ferafano@student.42antananarivo  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 08:05:44 by ferafano          #+#    #+#             */
-/*   Updated: 2024/09/13 08:58:13 by ferafano         ###   ########.fr       */
+/*   Updated: 2024/10/14 10:51:07 by ferafano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	this_func(t_oldpwd *var, char **copy_env, char *cwd)
 	if (var->new_value == NULL)
 		return (0);
 	copy_env[var->i] = ft_strjoin(copy_env[var->i], "=");
-	strncpy(var->new_value, copy_env[var->i], var->len + 2);
+	ft_strncpy(var->new_value, copy_env[var->i], var->len + 2);
 	ft_strcpy(var->new_value + var->len + 1, cwd);
 	copy_env[var->i] = var->new_value;
 	return (1);
@@ -29,7 +29,7 @@ int	that_func(t_oldpwd *var, char **copy_env, char *cwd)
 	var->new_value = malloc((var->len + 1 + ft_strlen(cwd) + 1) * sizeof(char));
 	if (var->new_value == NULL)
 		return (0);
-	strncpy(var->new_value, copy_env[var->i], var->len + 1);
+	ft_strncpy(var->new_value, copy_env[var->i], var->len + 1);
 	ft_strcpy(var->new_value + var->len + 1, cwd);
 	copy_env[var->i] = var->new_value;
 	return (1);
@@ -47,7 +47,7 @@ void	update_oldpwd(char *line_read, char *cwd, char **copy_env)
 	{
 		if (ft_strncmp(copy_env[var.i], line_read, var.len) == 0
 			&& (copy_env[var.i][var.len] == '='
-			|| copy_env[var.i][var.len] == '\0'))
+				|| copy_env[var.i][var.len] == '\0'))
 		{
 			if (copy_env[var.i][var.len] == '\0')
 			{
@@ -64,12 +64,22 @@ void	update_oldpwd(char *line_read, char *cwd, char **copy_env)
 
 int	change_to_path(char *path, char *cwd, char **copy_env)
 {
+	char	*home;
+
+	home = get_env_value("HOME", copy_env);
 	if (path[0] == '~' && (path[1] == '\0' || (path[1] == '/'
 				&& path[2] == '\0')))
-		change_to_home(cwd, copy_env);
+	{
+		if (change_to_home(cwd, copy_env, home) == 1)
+			return (1);
+	}
 	else if (path[0] == '~')
 	{
-		chdir("/home/ferafano/");
+		if (!chdir(home))
+		{
+			perror("cd");
+			return (1);
+		}
 		if (chdir(path + 2) == 0)
 			update_oldpwd("OLDPWD", cwd, copy_env);
 		else
@@ -97,7 +107,7 @@ int	ft_cd(char **argv, char **copy_env)
 	status = 0;
 	getcwd(cwd, sizeof(cwd));
 	if (argv[1] == NULL)
-		change_to_home(cwd, copy_env);
+		change_to_home(cwd, copy_env, home);
 	else if (argv[1] != NULL && argv[2] != NULL)
 	{
 		status = 1;
